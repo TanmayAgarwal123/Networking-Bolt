@@ -1,31 +1,33 @@
 import React, { useState } from 'react';
 import { useLocalStorage } from './hooks/useLocalStorage';
-import { Contact, Goal, Event, Achievement, Resource } from './types';
-import { initialContacts, initialGoals, initialEvents, initialAchievements, initialResources } from './data/initialData';
+import { Contact, Event, Resource } from './types';
+import { initialContacts, initialEvents, initialResources } from './data/initialData';
 import Dashboard from './components/Dashboard';
 import Contacts from './components/Contacts';
 import Calendar from './components/Calendar';
 import Analytics from './components/Analytics';
 import Resources from './components/Resources';
 import Navigation from './components/Navigation';
+import { useStreak } from './hooks/useStreak';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const { addActivity } = useStreak();
   
   // Data management with localStorage
   const [contacts, setContacts] = useLocalStorage<Contact[]>('networkmaster-contacts', initialContacts);
-  const [goals, setGoals] = useLocalStorage<Goal[]>('networkmaster-goals', initialGoals);
   const [events, setEvents] = useLocalStorage<Event[]>('networkmaster-events', initialEvents);
-  const [achievements, setAchievements] = useLocalStorage<Achievement[]>('networkmaster-achievements', initialAchievements);
   const [resources] = useLocalStorage<Resource[]>('networkmaster-resources', initialResources);
   
   // Contact management
   const handleAddContact = (contact: Contact) => {
     setContacts([...contacts, contact]);
+    addActivity(`Added new contact: ${contact.name}`, 'contact');
   };
 
   const handleUpdateContact = (updatedContact: Contact) => {
     setContacts(contacts.map(c => c.id === updatedContact.id ? updatedContact : c));
+    addActivity(`Updated contact: ${updatedContact.name}`, 'contact');
   };
 
   const handleDeleteContact = (contactId: string) => {
@@ -33,14 +35,10 @@ function App() {
     setEvents(events.filter(e => e.contactId !== contactId));
   };
 
-  // Goal management
-  const handleUpdateGoal = (updatedGoal: Goal) => {
-    setGoals(goals.map(g => g.id === updatedGoal.id ? updatedGoal : g));
-  };
-
   // Event management
   const handleAddEvent = (event: Event) => {
     setEvents([...events, event]);
+    addActivity(`Scheduled: ${event.title}`, 'meeting');
   };
 
   const handleUpdateEvent = (updatedEvent: Event) => {
@@ -66,10 +64,7 @@ function App() {
         return (
           <Dashboard 
             contacts={contacts}
-            goals={goals}
             events={events}
-            achievements={achievements}
-            onUpdateGoal={handleUpdateGoal}
             onSendMessage={handleSendMessage}
           />
         );
@@ -97,7 +92,6 @@ function App() {
           <Analytics 
             contacts={contacts}
             events={events}
-            achievements={achievements}
           />
         );
       case 'resources':
@@ -106,10 +100,7 @@ function App() {
         return (
           <Dashboard 
             contacts={contacts}
-            goals={goals}
             events={events}
-            achievements={achievements}
-            onUpdateGoal={handleUpdateGoal}
             onSendMessage={handleSendMessage}
           />
         );

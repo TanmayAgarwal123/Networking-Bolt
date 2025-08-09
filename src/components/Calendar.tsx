@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, MapPin } from 'lucide-react';
 import { Event, Contact } from '../types';
 import EventModal from './EventModal';
+import GoogleCalendarIntegration from './GoogleCalendarIntegration';
+import { useStreak } from '../hooks/useStreak';
 
 interface CalendarProps {
   events: Event[];
@@ -21,6 +23,7 @@ const Calendar: React.FC<CalendarProps> = ({
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<Event | undefined>();
+  const { addActivity } = useStreak();
 
   const upcomingEvents = events
     .filter(event => event.date >= new Date())
@@ -40,8 +43,10 @@ const Calendar: React.FC<CalendarProps> = ({
   const handleSaveEvent = (event: Event) => {
     if (selectedEvent) {
       onUpdateEvent(event);
+      addActivity(`Updated event: ${event.title}`, 'meeting');
     } else {
       onAddEvent(event);
+      addActivity(`Scheduled: ${event.title}`, 'meeting');
     }
   };
 
@@ -155,6 +160,8 @@ const Calendar: React.FC<CalendarProps> = ({
 
         {/* Upcoming Events */}
         <div className="space-y-6">
+          <GoogleCalendarIntegration />
+          
           <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-gray-200/50 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Upcoming Events</h3>
             

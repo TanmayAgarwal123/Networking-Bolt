@@ -14,25 +14,20 @@ import StreakCounter from './StreakCounter';
 import TodaysGoals from './TodaysGoals';
 import WeekendRecommendations from './WeekendRecommendations';
 import QuickActions from './QuickActions';
+import { useStreak } from '../hooks/useStreak';
 
 interface DashboardProps {
   contacts: Contact[];
-  goals: Goal[];
   events: Event[];
-  achievements: Achievement[];
-  onUpdateGoal: (goal: Goal) => void;
   onSendMessage: (contact: Contact) => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({
   contacts,
-  goals,
   events,
-  achievements,
-  onUpdateGoal,
   onSendMessage
 }) => {
-  const currentStreak = 7; // This would be calculated based on actual activity
+  const { streakData } = useStreak();
   const monthlyConnections = contacts.filter(c => {
     const addedDate = new Date(c.addedDate);
     const currentMonth = new Date().getMonth();
@@ -41,7 +36,6 @@ const Dashboard: React.FC<DashboardProps> = ({
   
   const responseRate = 78; // This would be calculated based on actual data
   const meetingsScheduled = events.filter(e => e.date >= new Date()).length;
-  const earnedAchievements = achievements.filter(a => a.earned).length;
 
   return (
     <div className="space-y-8">
@@ -108,15 +102,15 @@ const Dashboard: React.FC<DashboardProps> = ({
         <div className="bg-white/70 backdrop-blur-sm p-6 rounded-xl border border-gray-200/50 hover:shadow-lg transition-all duration-300">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Achievements</p>
-              <p className="text-3xl font-bold text-gray-900">{earnedAchievements}</p>
+              <p className="text-sm font-medium text-gray-600">Current Streak</p>
+              <p className="text-3xl font-bold text-gray-900">{streakData.currentStreak}</p>
             </div>
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
               <Award className="w-6 h-6 text-purple-600" />
             </div>
           </div>
           <div className="flex items-center mt-2">
-            <span className="text-sm text-purple-600">{achievements.length - earnedAchievements} to unlock</span>
+            <span className="text-sm text-purple-600">Best: {streakData.longestStreak} days</span>
           </div>
         </div>
       </div>
@@ -124,8 +118,8 @@ const Dashboard: React.FC<DashboardProps> = ({
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          <StreakCounter currentStreak={currentStreak} />
-          <TodaysGoals goals={goals} onUpdateGoal={onUpdateGoal} />
+          <StreakCounter />
+          <TodaysGoals contacts={contacts} />
         </div>
         <div className="space-y-8">
           <WeekendRecommendations contacts={contacts} onSendMessage={onSendMessage} />

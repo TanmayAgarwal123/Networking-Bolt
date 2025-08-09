@@ -1,14 +1,21 @@
 import React from 'react';
-import { TrendingUp, Award, Target, Users, MessageCircle, Calendar, Download } from 'lucide-react';
+import { TrendingUp, Award, Target, Users, MessageCircle, Calendar, Download, Plus, Edit } from 'lucide-react';
 import { Contact, Event, Achievement } from '../types';
+import { useStreak } from '../hooks/useStreak';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import AchievementModal from './AchievementModal';
 
 interface AnalyticsProps {
   contacts: Contact[];
   events: Event[];
-  achievements: Achievement[];
 }
 
-const Analytics: React.FC<AnalyticsProps> = ({ contacts, events, achievements }) => {
+const Analytics: React.FC<AnalyticsProps> = ({ contacts, events }) => {
+  const { streakData } = useStreak();
+  const [achievements, setAchievements] = useLocalStorage<Achievement[]>('networkmaster-achievements', []);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [selectedAchievement, setSelectedAchievement] = React.useState<Achievement | undefined>();
+  
   const totalContacts = contacts.length;
   const monthlyConnections = contacts.filter(c => {
     const addedDate = new Date(c.addedDate);
@@ -20,8 +27,48 @@ const Analytics: React.FC<AnalyticsProps> = ({ contacts, events, achievements })
   const meetingsScheduled = events.filter(e => e.date >= new Date()).length;
   const earnedAchievements = achievements.filter(a => a.earned).length;
   
-  const currentStreak = 7; // This would be calculated based on actual activity
-  const longestStreak = 15; // This would be stored and updated
+  // Update achievements based on current stats
+  React.useEffect(() => {
+    const updatedAchievements = achievements.map(achievement => {
+      let progress = achievement.progress || 0;
+      let earned = achievement.earned;
+      
+      switch (achievement.category) {
+        case 'milestone':
+          if (achievement.title.includes('First Connection')) {
+            progress = totalContacts > 0 ? 1 : 0;
+            earned = totalContacts > 0;
+          }
+          break;
+        case 'streak':
+          if (achievement.title.includes('Week Warrior')) {
+            progress = streakData.currentStreak;
+            earned = streakData.currentStreak >= 7;
+          }
+          break;
+        case 'meetings':
+          if (achievement.title.includes('Coffee Champion')) {
+            progress = events.filter(e => e.type === 'meetup').length;
+            earned = events.filter(e => e.type === 'meetup').length >= (achievement.requirement || 10);
+          }
+          break;
+        case 'connections':
+          progress = totalContacts;
+          earned = totalContacts >= (achievement.requirement || 50);
+          break;
+      }
+      
+      return {
+        ...achievement,
+        progress,
+        earned,
+        earnedDate: earned && !achievement.earned ? new Date().toISOString().split('T')[0] : achievement.earnedDate
+      };
+    });
+    
+    setAchievements(updatedAchievements);
+  }, [totalContacts, streakData.currentStreak, events.length]);
+
   const monthlyGoal = 40;
 
   const monthlyStats = [
@@ -37,8 +84,8 @@ const Analytics: React.FC<AnalyticsProps> = ({ contacts, events, achievements })
       monthlyConnections,
       responseRate,
       meetingsScheduled,
-      currentStreak,
-      longestStreak,
+      currentStreak: streakData.currentStreak,
+      longestStreak: streakData.longestStreak,
       earnedAchievements,
       totalAchievements: achievements.length,
       contactsByCompany: contacts.reduce((acc, contact) => {
@@ -99,6 +146,28 @@ const Analytics: React.FC<AnalyticsProps> = ({ contacts, events, achievements })
     a.download = 'networking-calendar.csv';
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleAddAchievement = () => {
+    setSelectedAchievement(undefined);
+    setIsModalOpen(true);
+  };
+
+  const handleEditAchievement = (achievement: Achievement) => {
+    setSelectedAchievement(achievement);
+    setIsModalOpen(true);
+  };
+
+  const handleSaveAchievement = (achievement: Achievement) => {
+    if (selectedAchievement) {
+      setAchievements(achievements.map(a => a.id === achievement.id ? achievement : a));
+    } else {
+      setAchievements([...achievements, achievement]);
+    }
+  };
+
+  const handleDeleteAchievement = (achievementId: string) => {
+    setAchievements(achievements.filter(a => a.id !== achievementId));
   };
 
   return (
@@ -235,8 +304,18 @@ const Analytics: React.FC<AnalyticsProps> = ({ contacts, events, achievements })
       {/* Achievements */}
       <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-gray-200/50 p-6">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-gray-900">Achievements</h3>
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">Achievements</h3>
+            <p className="text-sm text-gray-500">Track your networking milestones</p>
+          </div>
           <div className="flex items-center space-x-2">
+            <button
+              onClick={handleAddAchievement}
+              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+              title="Create achievement"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
             <Award className="w-5 h-5 text-yellow-500" />
             <span className="text-sm font-medium text-gray-600">
               {earnedAchievements}/{achievements.length} unlocked
@@ -248,33 +327,124 @@ const Analytics: React.FC<AnalyticsProps> = ({ contacts, events, achievements })
           {achievements.map((achievement) => (
             <div
               key={achievement.id}
-              className={`p-4 rounded-lg border transition-all duration-200 ${
+              className={`group p-4 rounded-lg border transition-all duration-200 cursor-pointer ${
                 achievement.earned
                   ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200 shadow-sm'
                   : 'bg-gray-50 border-gray-200 opacity-60'
               }`}
+              onClick={() => handleEditAchievement(achievement)}
             >
-              <div className="flex items-center space-x-3">
-                <div className={`text-2xl ${achievement.earned ? '' : 'grayscale'}`}>
-                  {achievement.icon}
-                </div>
-                <div className="flex-1">
-                  <h4 className={`font-medium ${achievement.earned ? 'text-gray-900' : 'text-gray-500'}`}>
-                    {achievement.title}
-                  </h4>
-                  <p className={`text-sm ${achievement.earned ? 'text-gray-600' : 'text-gray-400'}`}>
-                    {achievement.description}
-                  </p>
-                </div>
-                {achievement.earned && (
-                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs">✓</span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className={`text-2xl ${achievement.earned ? '' : 'grayscale'}`}>
+                    {achievement.icon}
                   </div>
-                )}
+                  <div className="flex-1">
+                    <h4 className={`font-medium ${achievement.earned ? 'text-gray-900' : 'text-gray-500'}`}>
+                      {achievement.title}
+                    </h4>
+                    <p className={`text-sm ${achievement.earned ? 'text-gray-600' : 'text-gray-400'}`}>
+                      {achievement.description}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-1">
+                  {achievement.earned && (
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs">✓</span>
+                    </div>
+                  )}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditAchievement(achievement);
+                    }}
+                    className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-blue-600 transition-all"
+                  >
+                    <Edit className="w-3 h-3" />
+                  </button>
+                </div>
               </div>
+              
+              {achievement.requirement && (
+                <div className="mt-3">
+                  <div className="flex justify-between text-xs text-gray-500 mb-1">
+                    <span>Progress</span>
+                    <span>{achievement.progress || 0}/{achievement.requirement}</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className={`h-2 rounded-full transition-all duration-500 ${
+                        achievement.earned ? 'bg-green-500' : 'bg-blue-500'
+                      }`}
+                      style={{ 
+                        width: `${Math.min(((achievement.progress || 0) / achievement.requirement) * 100, 100)}%` 
+                      }}
+                    ></div>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
+        
+        {achievements.length === 0 && (
+          <div className="text-center py-8 text-gray-500">
+            <Award className="w-12 h-12 mx-auto mb-2 opacity-50" />
+            <p>No achievements yet</p>
+            <button 
+              onClick={handleAddAchievement}
+              className="mt-2 text-blue-600 hover:text-blue-700"
+            >
+              Create your first achievement
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Streak Analytics */}
+      <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-gray-200/50 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Networking Streak Analytics</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="text-center">
+            <div className="text-3xl font-bold text-orange-600">{streakData.currentStreak}</div>
+            <div className="text-sm text-gray-600">Current Streak</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-purple-600">{streakData.longestStreak}</div>
+            <div className="text-sm text-gray-600">Best Streak</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-green-600">{streakData.streakHistory.length}</div>
+            <div className="text-sm text-gray-600">Total Active Days</div>
+          </div>
+        </div>
+        
+        {streakData.streakHistory.length > 0 && (
+          <div className="mt-6">
+            <h4 className="font-medium text-gray-900 mb-3">Recent Activity</h4>
+            <div className="space-y-2 max-h-40 overflow-y-auto">
+              {streakData.streakHistory.slice(-10).reverse().map((activity, index) => (
+                <div key={index} className="flex items-center space-x-3 p-2 bg-gray-50 rounded-lg">
+                  <div className={`w-3 h-3 rounded-full ${
+                    activity.type === 'contact' ? 'bg-blue-500' :
+                    activity.type === 'meeting' ? 'bg-green-500' : 'bg-purple-500'
+                  }`}></div>
+                  <div className="flex-1">
+                    <div className="text-sm font-medium text-gray-900">{activity.activity}</div>
+                    <div className="text-xs text-gray-500">{activity.date}</div>
+                  </div>
+                  <span className={`text-xs px-2 py-1 rounded-full ${
+                    activity.type === 'contact' ? 'bg-blue-100 text-blue-700' :
+                    activity.type === 'meeting' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'
+                  }`}>
+                    {activity.type}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Export Data */}
@@ -311,6 +481,14 @@ const Analytics: React.FC<AnalyticsProps> = ({ contacts, events, achievements })
           </button>
         </div>
       </div>
+
+      <AchievementModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        achievement={selectedAchievement}
+        onSave={handleSaveAchievement}
+        onDelete={handleDeleteAchievement}
+      />
     </div>
   );
 };
