@@ -20,7 +20,8 @@ const Analytics: React.FC<AnalyticsProps> = ({ contacts, events }) => {
   const monthlyConnections = contacts.filter(c => {
     const addedDate = new Date(c.addedDate);
     const currentMonth = new Date().getMonth();
-    return addedDate.getMonth() === currentMonth;
+    const currentYear = new Date().getFullYear();
+    return addedDate.getMonth() === currentMonth && addedDate.getFullYear() === currentYear;
   }).length;
   
   const responseRate = 78; // This would be calculated based on actual interaction data
@@ -66,7 +67,18 @@ const Analytics: React.FC<AnalyticsProps> = ({ contacts, events }) => {
       };
     });
     
-    setAchievements(updatedAchievements);
+    // Only update if there are actual changes
+    const hasChanges = updatedAchievements.some((updated, index) => {
+      const original = achievements[index];
+      return original && (
+        updated.progress !== original.progress || 
+        updated.earned !== original.earned
+      );
+    });
+    
+    if (hasChanges) {
+      setAchievements(updatedAchievements);
+    }
   }, [totalContacts, streakData.currentStreak, events.length]);
 
   const monthlyGoal = 40;

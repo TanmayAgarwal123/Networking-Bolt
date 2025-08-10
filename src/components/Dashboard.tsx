@@ -122,8 +122,14 @@ const Dashboard: React.FC<DashboardProps> = ({
           <TodaysGoals contacts={contacts} />
         </div>
         <div className="space-y-8">
-          <WeekendRecommendations contacts={contacts} onSendMessage={onSendMessage} />
-          <QuickActions />
+          <WeekendRecommendations 
+            contacts={contacts} 
+            onSendMessage={onSendMessage} 
+          />
+          <QuickActions 
+            onAddContact={() => alert('Navigate to the Network tab to add new contacts')}
+            onExportData={() => alert('Navigate to the Analytics tab to export your data')}
+          />
         </div>
       </div>
     </div>

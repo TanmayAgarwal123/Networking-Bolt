@@ -241,16 +241,21 @@ const ContactModal: React.FC<ContactModalProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Priority Score (1-100)
+                Priority Score (1-100) *
               </label>
               <input
                 type="number"
                 min="1"
                 max="100"
+                required
                 value={formData.priority}
                 onChange={(e) => setFormData(prev => ({ ...prev, priority: parseInt(e.target.value) }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Enter priority score (1-100)"
               />
+              <p className="text-xs text-gray-500 mt-1">
+                Higher scores (80-100) for key contacts, medium (50-79) for regular network, lower (1-49) for casual connections
+              </p>
             </div>
 
             <div>

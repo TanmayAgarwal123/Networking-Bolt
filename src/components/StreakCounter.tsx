@@ -10,12 +10,16 @@ const StreakCounter: React.FC<StreakCounterProps> = () => {
   const { streakData } = useStreak();
   const weeklyGoal = 7;
 
-  return (
+            <span className="font-medium text-gray-900">
+              {Math.round((Math.min(streakData.currentStreak, weeklyGoal) / weeklyGoal) * 100)}%
+            </span>
     <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-gray-200/50 p-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-semibold text-gray-900">Networking Streak</h3>
         <div className="flex items-center space-x-2">
-          <Flame className="w-5 h-5 text-orange-500" />
+              style={{ 
+                width: `${Math.min((streakData.currentStreak / weeklyGoal) * 100, 100)}%` 
+              }}
           <span className="text-sm font-medium text-orange-600">On fire!</span>
         </div>
       </div>
@@ -25,7 +29,10 @@ const StreakCounter: React.FC<StreakCounterProps> = () => {
           <div className="relative">
             <div className={`w-20 h-20 mx-auto bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center mb-3 ${streakData.currentStreak > 0 ? 'animate-pulse' : ''}`}>
               <span className="text-2xl font-bold text-white">{streakData.currentStreak}</span>
-            </div>
+                    <span className={`w-2 h-2 rounded-full ${
+                      activity.type === 'contact' ? 'bg-blue-400' :
+                      activity.type === 'meeting' ? 'bg-green-400' : 'bg-purple-400'
+                    }`}></span>
             {streakData.currentStreak > 0 && (
               <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
                 <Flame className="w-4 h-4 text-white" />
@@ -77,6 +84,13 @@ const StreakCounter: React.FC<StreakCounterProps> = () => {
               ))}
             </div>
           </div>
+          
+          {streakData.streakHistory.length === 0 && (
+            <div className="mt-4 text-center text-xs text-gray-500">
+              <p>Start your networking journey today!</p>
+              <p>Add a contact or complete a goal to begin your streak.</p>
+            </div>
+          )}
         )}
       </div>
     </div>

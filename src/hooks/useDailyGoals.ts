@@ -60,10 +60,20 @@ export function useDailyGoals() {
       }
     ];
 
-    // Select 3-4 goals based on current network state
-    const selectedGoals = goalTemplates
+    // Smart goal selection based on network state
+    let selectedTemplates = [...goalTemplates];
+    
+    // Prioritize based on network size
+    if (contacts.length < 5) {
+      selectedTemplates = selectedTemplates.filter(t => 
+        t.category === 'growth' || t.category === 'outreach'
+      );
+    }
+    
+    // Select 3-4 goals
+    const selectedGoals = selectedTemplates
       .sort(() => Math.random() - 0.5)
-      .slice(0, Math.floor(Math.random() * 2) + 3)
+      .slice(0, Math.min(Math.floor(Math.random() * 2) + 3, selectedTemplates.length))
       .map((template, index) => ({
         id: `daily-${today}-${index}`,
         text: template.text,

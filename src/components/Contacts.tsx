@@ -68,7 +68,7 @@ const Contacts: React.FC<ContactsProps> = ({
 
   const getPriorityColor = (priority: number) => {
     if (priority >= 80) return 'text-red-600 bg-red-50';
-    if (priority >= 60) return 'text-orange-600 bg-orange-50';
+    if (priority >= 50) return 'text-orange-600 bg-orange-50';
     return 'text-green-600 bg-green-50';
   };
 

@@ -111,14 +111,16 @@ const TodaysGoals: React.FC<TodaysGoalsProps> = ({ contacts }) => {
           return (
             <div 
               key={goal.id}
-              className={`flex items-start space-x-3 p-4 rounded-lg border transition-all duration-200 hover:shadow-md cursor-pointer ${
+              className={`group flex items-start space-x-3 p-4 rounded-lg border transition-all duration-200 hover:shadow-md ${
                 goal.completed 
                   ? 'bg-green-50 border-green-200 opacity-75' 
                   : 'bg-white border-gray-200 hover:border-blue-300'
               }`}
-              onClick={() => toggleGoal(goal.id)}
             >
-              <button className="flex-shrink-0 mt-0.5">
+              <button 
+                className="flex-shrink-0 mt-0.5"
+                onClick={() => toggleGoal(goal.id)}
+              >
                 {goal.completed ? (
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
                 ) : (
@@ -175,7 +177,7 @@ const TodaysGoals: React.FC<TodaysGoalsProps> = ({ contacts }) => {
         })}
       </div>
 
-      {completedCount === goals.length && (
+      {completedCount === goals.length && goals.length > 0 && (
         <div className="mt-6 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200">
           <div className="flex items-center space-x-2">
             <CheckCircle2 className="w-5 h-5 text-green-500" />
@@ -184,6 +186,19 @@ const TodaysGoals: React.FC<TodaysGoalsProps> = ({ contacts }) => {
           <p className="text-sm text-green-600 mt-1">
             Amazing work! You're building momentum towards your dream job.
           </p>
+        </div>
+      )}
+      
+      {goals.length === 0 && (
+        <div className="text-center py-8 text-gray-500">
+          <Star className="w-12 h-12 mx-auto mb-2 opacity-50" />
+          <p>No goals for today yet</p>
+          <button 
+            onClick={handleAddGoal}
+            className="mt-2 text-blue-600 hover:text-blue-700"
+          >
+            Add your first goal
+          </button>
         </div>
       )}
       

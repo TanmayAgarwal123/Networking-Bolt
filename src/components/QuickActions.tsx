@@ -1,35 +1,40 @@
 import React from 'react';
 import { Plus, Search, Download, Lightbulb } from 'lucide-react';
 
-const QuickActions = () => {
+interface QuickActionsProps {
+  onAddContact?: () => void;
+  onExportData?: () => void;
+}
+
+const QuickActions: React.FC<QuickActionsProps> = ({ onAddContact, onExportData }) => {
   const actions = [
     {
       icon: Plus,
       label: 'Add New Contact',
       description: 'Import or manually add',
       color: 'bg-green-600 hover:bg-green-700',
-      action: () => console.log('Add contact')
+      action: onAddContact || (() => alert('Navigate to Contacts tab to add new contacts'))
     },
     {
       icon: Search,
       label: 'Find Industry Experts',
       description: 'Discover new connections',
       color: 'bg-blue-600 hover:bg-blue-700',
-      action: () => console.log('Find experts')
+      action: () => alert('Feature coming soon: AI-powered expert discovery based on your target companies and roles')
     },
     {
       icon: Download,
       label: 'Export Data',
       description: 'CSV download',
       color: 'bg-purple-600 hover:bg-purple-700',
-      action: () => console.log('Export data')
+      action: onExportData || (() => alert('Navigate to Analytics tab to export your data'))
     },
     {
       icon: Lightbulb,
       label: 'Get Tips',
       description: 'Networking advice',
       color: 'bg-orange-600 hover:bg-orange-700',
-      action: () => console.log('Get tips')
+      action: () => alert('Navigate to Resources tab for comprehensive networking guides and tips')
     }
   ];
 
