@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { Contact, Event, Resource, Achievement, ExpertProfile } from './types';
 import { initialContacts, initialEvents, initialResources, initialAchievements } from './data/initialData';
+import { useAI } from './hooks/useAI';
 import Dashboard from './components/Dashboard';
 import Contacts from './components/Contacts';
 import Calendar from './components/Calendar';
@@ -16,6 +17,7 @@ import { useStreak } from './hooks/useStreak';
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const { addActivity, streakData } = useStreak();
+  const { isGenerating } = useAI();
   
   // Data management with localStorage
   const [contacts, setContacts] = useLocalStorage<Contact[]>('networkmaster-contacts', initialContacts);
