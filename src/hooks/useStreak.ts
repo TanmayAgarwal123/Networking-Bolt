@@ -10,9 +10,9 @@ export interface StreakData {
 
 export function useStreak() {
   const [streakData, setStreakData] = useLocalStorage<StreakData>('networkmaster-streak', {
-    currentStreak: 0,
-    longestStreak: 0,
-    lastActivityDate: '',
+    currentStreak: 1,
+    longestStreak: 1,
+    lastActivityDate: new Date().toISOString().split('T')[0],
     streakHistory: []
   });
 
@@ -29,6 +29,9 @@ export function useStreak() {
       // If last activity was yesterday, continue streak
       if (streakData.lastActivityDate === yesterday) {
         newStreak = streakData.currentStreak + 1;
+      } else if (streakData.lastActivityDate === today) {
+        // If already active today, maintain current streak
+        newStreak = streakData.currentStreak;
       }
       
       const newStreakData = {
@@ -58,7 +61,8 @@ export function useStreak() {
         streakData.lastActivityDate !== yesterday) {
       const resetStreakData = {
         ...streakData,
-        currentStreak: 0
+        currentStreak: 1,
+        lastActivityDate: today
       };
       setStreakData(resetStreakData);
       return resetStreakData;

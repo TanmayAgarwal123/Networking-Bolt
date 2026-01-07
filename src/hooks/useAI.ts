@@ -8,7 +8,7 @@ export function useAI() {
     setIsGenerating(true);
     
     // Simulate AI processing time
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 800));
     
     const today = new Date().toISOString().split('T')[0];
     
@@ -29,7 +29,7 @@ export function useAI() {
         ]
       },
       {
-        condition: () => contacts.filter(c => c.lastContact.includes('week')).length > 2,
+        condition: () => contacts.filter(c => c.lastContact && c.lastContact.includes('week')).length > 2,
         goals: [
           { text: "Schedule coffee chats with contacts you haven't spoken to in weeks", icon: "Coffee", priority: "medium" as const, category: "meeting" },
           { text: "Update notes for 3 contacts with recent conversation details", icon: "Edit", priority: "low" as const, category: "maintenance" }

@@ -14,8 +14,8 @@ const WeekendRecommendations: React.FC<WeekendRecommendationsProps> = ({
   // Generate recommendations based on last contact date and priority
   const recommendations = contacts
     .filter(contact => {
-      const needsFollowup = contact.lastContact.includes('week') || 
-                           contact.lastContact.includes('month') || 
+      const needsFollowup = (contact.lastContact && contact.lastContact.includes('week')) || 
+                           (contact.lastContact && contact.lastContact.includes('month')) || 
                            contact.status === 'needs_followup';
       return needsFollowup && contact.priority >= 70;
     })
@@ -27,10 +27,10 @@ const WeekendRecommendations: React.FC<WeekendRecommendationsProps> = ({
     }));
 
   function generateReason(contact: Contact): string {
-    if (contact.lastContact.includes('month')) {
+    if (contact.lastContact && contact.lastContact.includes('month')) {
       return 'Long time since last contact - great time to reconnect!';
     }
-    if (contact.lastContact.includes('week')) {
+    if (contact.lastContact && contact.lastContact.includes('week')) {
       return 'Perfect timing for a follow-up conversation';
     }
     if (contact.status === 'needs_followup') {
