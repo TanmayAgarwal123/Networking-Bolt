@@ -188,7 +188,7 @@ function App() {
             </div>
             <div className="flex items-center space-x-2">
               {isGenerating && (
-              <span className="text-sm font-medium text-green-700">{streakData.currentStreak} day streak!</span>
+                <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
                   <span className="text-sm font-medium text-purple-700">AI Working...</span>
                 </div>
