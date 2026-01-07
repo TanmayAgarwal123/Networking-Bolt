@@ -195,7 +195,7 @@ function App() {
               )}
               <div className="flex items-center space-x-1 bg-green-50 px-3 py-1 rounded-full">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm font-medium text-green-700">7 day streak!</span>
+                <span className="text-sm font-medium text-green-700">{streakData.currentStreak} day streak!</span>
               </div>
             </div>
           </div>
