@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, Award, Target, Users, MessageCircle, Calendar, Download, Plus, Edit, AlertTriangle, CheckCircle } from 'lucide-react';
+import { TrendingUp, Award, Target, Users, MessageCircle, Calendar, Download, Plus, CreditCard as Edit, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Contact, Event, Achievement } from '../types';
 import { useStreak } from '../hooks/useStreak';
 import { useLocalStorage } from '../hooks/useLocalStorage';
