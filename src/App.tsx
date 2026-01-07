@@ -16,7 +16,7 @@ import { useStreak } from './hooks/useStreak';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const { addActivity } = useStreak();
+  const { addActivity, streakData } = useStreak();
   const { isGenerating } = useAI();
   
   // Data management with localStorage
