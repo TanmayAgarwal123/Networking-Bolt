@@ -14,7 +14,7 @@ export function useSupabaseStreak() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (isAuthenticated && user) {
+    if (isAuthenticated && user && supabase) {
       fetchStreakData();
     } else {
       setStreakData({
@@ -28,7 +28,7 @@ export function useSupabaseStreak() {
   }, [isAuthenticated, user]);
 
   const fetchStreakData = async () => {
-    if (!user) return;
+    if (!user || !supabase) return;
 
     try {
       const { data, error } = await supabase
@@ -58,7 +58,7 @@ export function useSupabaseStreak() {
   };
 
   const addActivity = async (activity: string, type: 'contact' | 'meeting' | 'goal' = 'contact') => {
-    if (!user) return streakData;
+    if (!user || !supabase) return streakData;
 
     const today = new Date().toISOString().split('T')[0];
     const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
@@ -111,7 +111,7 @@ export function useSupabaseStreak() {
   };
 
   const checkStreakValidity = async () => {
-    if (!user) return streakData;
+    if (!user || !supabase) return streakData;
 
     const today = new Date().toISOString().split('T')[0];
     const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];

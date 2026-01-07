@@ -36,6 +36,11 @@ export function useAuthProvider(): AuthContextType {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!supabase) {
+      setIsLoading(false);
+      return;
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -61,6 +66,8 @@ export function useAuthProvider(): AuthContextType {
   }, []);
 
   const fetchProfile = async (userId: string) => {
+    if (!supabase) return;
+    
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -81,6 +88,10 @@ export function useAuthProvider(): AuthContextType {
   };
 
   const signUp = async (email: string, password: string, fullName: string) => {
+    if (!supabase) {
+      return { success: false, error: 'Supabase not configured. Please connect your Supabase project.' };
+    }
+    
     try {
       setIsLoading(true);
       const { data, error } = await supabase.auth.signUp({
@@ -106,6 +117,10 @@ export function useAuthProvider(): AuthContextType {
   };
 
   const signIn = async (email: string, password: string) => {
+    if (!supabase) {
+      return { success: false, error: 'Supabase not configured. Please connect your Supabase project.' };
+    }
+    
     try {
       setIsLoading(true);
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -126,6 +141,8 @@ export function useAuthProvider(): AuthContextType {
   };
 
   const signOut = async () => {
+    if (!supabase) return;
+    
     try {
       setIsLoading(true);
       await supabase.auth.signOut();
@@ -137,6 +154,7 @@ export function useAuthProvider(): AuthContextType {
   };
 
   const updateProfile = async (updates: Partial<Profile>) => {
+    if (!supabase) return { success: false, error: 'Supabase not configured' };
     if (!user) return { success: false, error: 'Not authenticated' };
 
     try {

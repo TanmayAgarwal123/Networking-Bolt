@@ -45,6 +45,10 @@ const LoginForm: React.FC = () => {
 
   const handleDemoLogin = async () => {
     setError('');
+    if (!supabase) {
+      setError('Please connect your Supabase project first by clicking the "Supabase" button in the settings.');
+      return;
+    }
     setError('Demo login is not available. Please create an account or sign in with your existing credentials.');
   };
 

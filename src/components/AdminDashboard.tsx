@@ -29,12 +29,14 @@ const AdminDashboard: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
-    if (isAdmin) {
+    if (isAdmin && supabase) {
       fetchAllUsers();
     }
   }, [isAdmin]);
 
   const fetchAllUsers = async () => {
+    if (!supabase) return;
+    
     try {
       setLoading(true);
       
@@ -93,6 +95,8 @@ const AdminDashboard: React.FC = () => {
   };
 
   const fetchUserDetails = async (userId: string) => {
+    if (!supabase) return;
+    
     try {
       const [contactsRes, eventsRes, achievementsRes] = await Promise.all([
         supabase.from('contacts').select('*').eq('user_id', userId),
@@ -111,6 +115,8 @@ const AdminDashboard: React.FC = () => {
   };
 
   const toggleUserRole = async (userId: string, currentRole: 'user' | 'admin') => {
+    if (!supabase) return;
+    
     const newRole = currentRole === 'admin' ? 'user' : 'admin';
     
     if (!window.confirm(`Change user role to ${newRole}?`)) return;
@@ -134,6 +140,8 @@ const AdminDashboard: React.FC = () => {
   };
 
   const deleteUser = async (userId: string, userEmail: string) => {
+    if (!supabase) return;
+    
     if (!window.confirm(`Delete user ${userEmail}? This action cannot be undone.`)) return;
 
     try {
@@ -153,6 +161,8 @@ const AdminDashboard: React.FC = () => {
   };
 
   const exportAllData = async () => {
+    if (!supabase) return;
+    
     try {
       const allData = {
         users: users.map(u => u.profile),
@@ -188,12 +198,14 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  if (!isAdmin) {
+  if (!isAdmin || !supabase) {
     return (
       <div className="text-center py-12">
         <Shield className="w-16 h-16 mx-auto mb-4 text-red-400" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">Access Denied</h3>
-        <p className="text-gray-600">You don't have admin privileges to view this page.</p>
+        <p className="text-gray-600">
+          {!supabase ? 'Please connect your Supabase project to access admin features.' : 'You don\'t have admin privileges to view this page.'}
+        </p>
       </div>
     );
   }

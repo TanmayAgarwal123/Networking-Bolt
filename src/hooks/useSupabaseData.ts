@@ -142,7 +142,7 @@ export function useSupabaseData() {
 
   // Fetch all user data
   useEffect(() => {
-    if (isAuthenticated && user) {
+    if (isAuthenticated && user && supabase) {
       fetchAllData();
     } else {
       setContacts([]);
@@ -154,7 +154,7 @@ export function useSupabaseData() {
   }, [isAuthenticated, user]);
 
   const fetchAllData = async () => {
-    if (!user) return;
+    if (!user || !supabase) return;
 
     try {
       setLoading(true);
@@ -200,7 +200,7 @@ export function useSupabaseData() {
 
   // Contact operations
   const addContact = async (contact: Contact) => {
-    if (!user) return;
+    if (!user || !supabase) return;
 
     try {
       const { error } = await supabase
@@ -216,7 +216,7 @@ export function useSupabaseData() {
   };
 
   const updateContact = async (contact: Contact) => {
-    if (!user) return;
+    if (!user || !supabase) return;
 
     try {
       const { error } = await supabase
@@ -233,6 +233,8 @@ export function useSupabaseData() {
   };
 
   const deleteContact = async (contactId: string) => {
+    if (!supabase) return;
+    
     try {
       const { error } = await supabase
         .from('contacts')
@@ -250,7 +252,7 @@ export function useSupabaseData() {
 
   // Event operations
   const addEvent = async (event: Event) => {
-    if (!user) return;
+    if (!user || !supabase) return;
 
     try {
       const { error } = await supabase
@@ -266,7 +268,7 @@ export function useSupabaseData() {
   };
 
   const updateEvent = async (event: Event) => {
-    if (!user) return;
+    if (!user || !supabase) return;
 
     try {
       const { error } = await supabase
@@ -283,6 +285,8 @@ export function useSupabaseData() {
   };
 
   const deleteEvent = async (eventId: string) => {
+    if (!supabase) return;
+    
     try {
       const { error } = await supabase
         .from('events')
@@ -299,7 +303,7 @@ export function useSupabaseData() {
 
   // Achievement operations
   const addAchievement = async (achievement: Achievement) => {
-    if (!user) return;
+    if (!user || !supabase) return;
 
     try {
       const { error } = await supabase
@@ -315,7 +319,7 @@ export function useSupabaseData() {
   };
 
   const updateAchievement = async (achievement: Achievement) => {
-    if (!user) return;
+    if (!user || !supabase) return;
 
     try {
       const { error } = await supabase
@@ -332,6 +336,8 @@ export function useSupabaseData() {
   };
 
   const deleteAchievement = async (achievementId: string) => {
+    if (!supabase) return;
+    
     try {
       const { error } = await supabase
         .from('achievements')
@@ -348,7 +354,7 @@ export function useSupabaseData() {
 
   // Goal operations
   const addGoal = async (goal: Goal) => {
-    if (!user) return;
+    if (!user || !supabase) return;
 
     try {
       const { error } = await supabase
@@ -364,7 +370,7 @@ export function useSupabaseData() {
   };
 
   const updateGoal = async (goal: Goal) => {
-    if (!user) return;
+    if (!user || !supabase) return;
 
     try {
       const { error } = await supabase
@@ -381,6 +387,8 @@ export function useSupabaseData() {
   };
 
   const deleteGoal = async (goalId: string) => {
+    if (!supabase) return;
+    
     try {
       const { error } = await supabase
         .from('goals')
