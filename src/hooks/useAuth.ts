@@ -67,13 +67,13 @@ export function useAuthProvider(): AuthContextType {
 
   const fetchProfile = async (userId: string) => {
     if (!supabase) return;
-    
+
     try {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching profile:', error);
