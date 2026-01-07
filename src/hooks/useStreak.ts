@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from './useAuth';
 import { useLocalStorage } from './useLocalStorage';
 
 export interface StreakData {
@@ -9,7 +10,10 @@ export interface StreakData {
 }
 
 export function useStreak() {
-  const [streakData, setStreakData] = useLocalStorage<StreakData>('networkmaster-streak', {
+  const { user } = useAuth();
+  const getUserKey = (key: string) => user ? `${key}-${user.id}` : key;
+  
+  const [streakData, setStreakData] = useLocalStorage<StreakData>(getUserKey('networkmaster-streak'), {
     currentStreak: 1,
     longestStreak: 1,
     lastActivityDate: '',

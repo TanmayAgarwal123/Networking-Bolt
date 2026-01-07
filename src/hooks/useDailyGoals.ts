@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from './useAuth';
 import { useLocalStorage } from './useLocalStorage';
 import { Goal } from '../types';
 
@@ -9,7 +10,10 @@ interface DailyGoals {
 }
 
 export function useDailyGoals() {
-  const [dailyGoals, setDailyGoals] = useLocalStorage<DailyGoals[]>('networkmaster-daily-goals', []);
+  const { user } = useAuth();
+  const getUserKey = (key: string) => user ? `${key}-${user.id}` : key;
+  
+  const [dailyGoals, setDailyGoals] = useLocalStorage<DailyGoals[]>(getUserKey('networkmaster-daily-goals'), []);
 
   const generateDailyGoals = (contacts: any[]): Goal[] => {
     const today = new Date().toISOString().split('T')[0];

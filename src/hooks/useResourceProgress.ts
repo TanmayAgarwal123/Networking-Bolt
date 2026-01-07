@@ -1,8 +1,12 @@
 import { useLocalStorage } from './useLocalStorage';
+import { useAuth } from './useAuth';
 import { ResourceProgress } from '../types';
 
 export function useResourceProgress() {
-  const [progress, setProgress] = useLocalStorage<ResourceProgress[]>('networkmaster-resource-progress', []);
+  const { user } = useAuth();
+  const getUserKey = (key: string) => user ? `${key}-${user.id}` : key;
+  
+  const [progress, setProgress] = useLocalStorage<ResourceProgress[]>(getUserKey('networkmaster-resource-progress'), []);
 
   const markResourceCompleted = (resourceId: string, timeSpent?: number, rating?: number) => {
     const existingProgress = progress.find(p => p.resourceId === resourceId);

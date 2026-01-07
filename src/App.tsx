@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { useLocalStorage } from './hooks/useLocalStorage';
 import { Contact, Event, Resource, Achievement, ExpertProfile } from './types';
-import { initialContacts, initialEvents, initialResources, initialAchievements } from './data/initialData';
+import { initialResources } from './data/initialData';
+import { useAuth } from './hooks/useAuth';
+import { useUserData } from './hooks/useUserData';
 import { useAI } from './hooks/useAI';
+import { AuthProvider } from './components/AuthProvider';
+import LoginForm from './components/LoginForm';
+import UserProfile from './components/UserProfile';
 import Dashboard from './components/Dashboard';
 import Contacts from './components/Contacts';
 import Calendar from './components/Calendar';
@@ -14,16 +18,20 @@ import Achievements from './components/Achievements';
 import Navigation from './components/Navigation';
 import { useStreak } from './hooks/useStreak';
 
-function App() {
+function AppContent() {
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [showProfile, setShowProfile] = useState(false);
+  const { user, isAuthenticated } = useAuth();
   const { addActivity, streakData } = useStreak();
   const { isGenerating } = useAI();
   
-  // Data management with localStorage
-  const [contacts, setContacts] = useLocalStorage<Contact[]>('networkmaster-contacts', initialContacts);
-  const [events, setEvents] = useLocalStorage<Event[]>('networkmaster-events', initialEvents);
-  const [achievements, setAchievements] = useLocalStorage<Achievement[]>('networkmaster-achievements', initialAchievements);
-  const [resources] = useLocalStorage<Resource[]>('networkmaster-resources', initialResources);
+  // User-specific data management
+  const { contacts, setContacts, events, setEvents, achievements, setAchievements } = useUserData();
+  const resources = initialResources; // Resources are global, not user-specific
+  
+  if (!isAuthenticated) {
+    return <LoginForm />;
+  }
   
   // Contact management
   const handleAddContact = (contact: Contact) => {
@@ -198,14 +206,36 @@ function App() {
             </div>
           </div>
         </header>
+            <button
+              onClick={() => setShowProfile(true)}
+              className="flex items-center space-x-2 px-3 py-1 bg-white/60 backdrop-blur-sm rounded-full border border-gray-200/50 hover:bg-white/80 transition-colors"
+            >
+              <div className="w-6 h-6 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
+                {user?.avatar || user?.name.charAt(0).toUpperCase()}
+              </div>
+              <span className="text-sm font-medium text-gray-700">{user?.name}</span>
+            </button>
 
         <Navigation activeTab={activeTab} setActiveTab={setActiveTab} />
         
         <main className="py-8">
           {renderActiveTab()}
         </main>
+        
+        <UserProfile 
+          isOpen={showProfile} 
+          onClose={() => setShowProfile(false)} 
+        />
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

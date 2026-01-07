@@ -145,3 +145,22 @@ export interface ResourceProgress {
   timeSpent?: number;
   rating?: number;
 }
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  createdAt: string;
+  avatar?: string;
+  preferences?: {
+    theme?: 'light' | 'dark';
+    notifications?: boolean;
+    weeklyGoal?: number;
+  };
+}
+
+export interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+}
