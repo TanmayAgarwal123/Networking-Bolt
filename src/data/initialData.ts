@@ -118,15 +118,52 @@ export const initialEvents: Event[] = [
 export const initialAchievements: Achievement[] = [
   {
     id: '1',
-    title: 'First Connection',
-    description: 'Made your first professional connection',
+    title: 'Getting Started',
+    description: 'Add your first contact to the network',
     earned: true,
-    icon: '🎯',
+    icon: '🚀',
     earnedDate: '2024-12-01',
-    category: 'milestone'
+    category: 'milestone',
+    requirement: 1,
+    progress: 1,
+    points: 10
   },
   {
     id: '2',
+    title: 'Building Network',
+    description: 'Add 10 contacts to your network',
+    earned: true,
+    icon: '🌱',
+    earnedDate: '2024-12-10',
+    category: 'milestone',
+    requirement: 10,
+    progress: 10,
+    points: 50
+  },
+  {
+    id: '3',
+    title: 'Network Builder',
+    description: 'Add 50 contacts to your network',
+    earned: false,
+    icon: '🏗️',
+    category: 'milestone',
+    requirement: 50,
+    progress: 3,
+    points: 200
+  },
+  {
+    id: '4',
+    title: 'Master Networker',
+    description: 'Add 100 contacts to your network',
+    earned: false,
+    icon: '👑',
+    category: 'milestone',
+    requirement: 100,
+    progress: 3,
+    points: 500
+  },
+  {
+    id: '5',
     title: 'Week Warrior',
     description: 'Maintained 7-day networking streak',
     earned: true,
@@ -134,20 +171,357 @@ export const initialAchievements: Achievement[] = [
     earnedDate: '2024-12-15',
     category: 'streak',
     requirement: 7,
-    progress: 7
+    progress: 7,
+    points: 100
   },
   {
-    id: '3',
+    id: '6',
+    title: 'Monthly Master',
+    description: 'Maintain a 30-day networking streak',
+    earned: false,
+    icon: '⭐',
+    category: 'streak',
+    requirement: 30,
+    progress: 7,
+    points: 500
+  },
+  {
+    id: '7',
+    title: 'Century Club',
+    description: 'Maintain a 100-day networking streak',
+    earned: false,
+    icon: '💎',
+    category: 'streak',
+    requirement: 100,
+    progress: 7,
+    points: 2000
+  },
+  {
+    id: '8',
+    title: 'Ice Breaker',
+    description: 'Log your first interaction',
+    earned: true,
+    icon: '🧊',
+    earnedDate: '2024-12-01',
+    category: 'engagement',
+    requirement: 1,
+    progress: 1,
+    points: 10
+  },
+  {
+    id: '9',
+    title: 'Conversation Master',
+    description: 'Use 20 conversation templates',
+    earned: false,
+    icon: '💬',
+    category: 'engagement',
+    requirement: 20,
+    progress: 0,
+    points: 100
+  },
+  {
+    id: '10',
+    title: 'Cold Outreach Pro',
+    description: 'Successfully connect with 5 unknown experts',
+    earned: false,
+    icon: '🎯',
+    category: 'growth',
+    requirement: 5,
+    progress: 0,
+    points: 300
+  },
+  {
+    id: '11',
+    title: 'Weekend Warrior',
+    description: 'Complete 10 weekend networking activities',
+    earned: false,
+    icon: '🏃',
+    category: 'special',
+    requirement: 10,
+    progress: 0,
+    points: 150
+  },
+  {
+    id: '12',
+    title: 'Early Bird',
+    description: 'Complete a networking event before 9 AM',
+    earned: false,
+    icon: '🌅',
+    category: 'special',
+    requirement: 1,
+    progress: 0,
+    points: 50
+  },
+  {
+    id: '13',
     title: 'Coffee Champion',
     description: 'Scheduled 10 coffee chats',
     earned: false,
     icon: '☕',
     category: 'meetings',
     requirement: 10,
-    progress: 3
+    progress: 3,
+    points: 150
   }
 ];
 
+export const conversationTemplates: ConversationTemplate[] = [
+  {
+    id: '1',
+    title: 'Cold LinkedIn Outreach',
+    category: 'cold_outreach',
+    scenario: 'Reaching out to someone you don\'t know on LinkedIn',
+    template: `Hi [Name],
+
+I hope this message finds you well. I'm [Your Name], a Computer Science graduate student at [University] with a keen interest in [specific area/technology they work with].
+
+I came across your profile and was impressed by your work at [Company], particularly [specific project/achievement]. As someone aspiring to work in [industry/role], I would greatly value the opportunity to learn from your experience.
+
+Would you be open to a brief 15-20 minute coffee chat or virtual call? I'd love to hear about your journey and any advice you might have for someone starting their career in tech.
+
+Thank you for your time, and I look forward to hearing from you.
+
+Best regards,
+[Your Name]`,
+    tips: [
+      'Personalize the message with specific details about their work',
+      'Keep it concise and respectful of their time',
+      'Mention your university and background briefly',
+      'Be specific about what you want (advice, not a job)',
+      'Always include a clear call-to-action'
+    ]
+  },
+  {
+    id: '2',
+    title: 'Alumni Network Outreach',
+    category: 'cold_outreach',
+    scenario: 'Connecting with alumni from your university',
+    template: `Hi [Name],
+
+I hope you're doing well! I'm [Your Name], a current [degree] student at [University], and I noticed we're both [University] alumni.
+
+I'm particularly interested in [their field/company] and would love to learn more about your experience transitioning from [University] to [Company/Industry]. As a fellow [University mascot/alumni], I was hoping you might be willing to share some insights about your career journey.
+
+Would you be available for a brief coffee chat or phone call in the coming weeks? I'd be happy to work around your schedule.
+
+Go [University mascot]!
+
+Best,
+[Your Name]`,
+    tips: [
+      'Leverage the shared university connection',
+      'Use school-specific language and references',
+      'Mention your current status at the university',
+      'Be respectful of the alumni bond',
+      'Include school spirit elements'
+    ]
+  },
+  {
+    id: '3',
+    title: 'Follow-up After Meeting',
+    category: 'follow_up',
+    scenario: 'Following up after meeting someone at an event or coffee chat',
+    template: `Hi [Name],
+
+Thank you so much for taking the time to meet with me [yesterday/last week]. I really enjoyed our conversation about [specific topic discussed] and found your insights about [specific advice/information] particularly valuable.
+
+As you suggested, I've [specific action they recommended]. I'd love to keep you updated on my progress and would welcome any additional thoughts you might have.
+
+[Optional: Attach something of value - article, resource, connection]
+
+Thank you again for your time and guidance. I hope we can stay in touch!
+
+Best regards,
+[Your Name]`,
+    tips: [
+      'Send within 24-48 hours of meeting',
+      'Reference specific parts of your conversation',
+      'Show that you took action on their advice',
+      'Offer something of value in return',
+      'Keep the door open for future communication'
+    ]
+  },
+  {
+    id: '4',
+    title: 'Coffee Chat Request',
+    category: 'coffee_chat',
+    scenario: 'Requesting an informal coffee meeting',
+    template: `Hi [Name],
+
+I hope you're having a great week! I've been following your work at [Company] and am really impressed by [specific achievement/project].
+
+I'm currently [your situation - student, job searching, etc.] and would love to learn more about your experience in [their field/role]. Would you be interested in grabbing coffee sometime in the next few weeks? I'd love to hear about your career journey and any advice you might have.
+
+I'm happy to meet wherever is most convenient for you, or we could do a virtual coffee chat if that works better.
+
+Looking forward to hearing from you!
+
+Best,
+[Your Name]`,
+    tips: [
+      'Suggest a low-commitment meeting',
+      'Be flexible with location and format',
+      'Show genuine interest in their work',
+      'Keep the request casual and friendly',
+      'Offer virtual options for convenience'
+    ]
+  },
+  {
+    id: '5',
+    title: 'Thank You After Help',
+    category: 'thank_you',
+    scenario: 'Thanking someone who provided assistance or advice',
+    template: `Hi [Name],
+
+I wanted to reach out and thank you for [specific help they provided]. Your [advice/introduction/recommendation] has been incredibly helpful, and I'm excited to share that [positive outcome/progress made].
+
+[Specific example of how their help made a difference]
+
+I truly appreciate you taking the time to help me, and I hope I can pay it forward someday. Please let me know if there's ever anything I can do to help you in return.
+
+With gratitude,
+[Your Name]`,
+    tips: [
+      'Be specific about what they did to help',
+      'Share the positive outcome of their assistance',
+      'Express genuine gratitude',
+      'Offer to help them in return',
+      'Keep it concise but heartfelt'
+    ]
+  },
+  {
+    id: '6',
+    title: 'Referral Request',
+    category: 'referral_request',
+    scenario: 'Asking for a referral to a job or opportunity',
+    template: `Hi [Name],
+
+I hope you're doing well! I wanted to reach out because I noticed that [Company] has an opening for [specific role] that aligns perfectly with my background and interests.
+
+Given your experience at [Company] and our previous conversations about [relevant topic], I was wondering if you'd be comfortable providing a referral or introduction. I've attached my resume for your review.
+
+[Brief summary of your qualifications and why you're interested]
+
+I completely understand if you're not able to provide a referral, and I appreciate any guidance you might have about the application process.
+
+Thank you for considering this, and I hope to hear from you soon.
+
+Best regards,
+[Your Name]`,
+    tips: [
+      'Only ask people you have a genuine relationship with',
+      'Be specific about the role and company',
+      'Attach your resume for easy reference',
+      'Give them an easy way to say no',
+      'Express appreciation regardless of their response'
+    ]
+  },
+  {
+    id: '7',
+    title: 'Introduction Request',
+    category: 'introduction',
+    scenario: 'Asking for an introduction to someone in their network',
+    template: `Hi [Name],
+
+I hope you're having a great week! I was wondering if you might be able to help me with an introduction.
+
+I'm very interested in learning more about [specific area/company/role], and I noticed that you're connected with [Person's name] at [Company]. Based on their background in [relevant area], I think they would be a great person to speak with about [specific topic/advice you're seeking].
+
+Would you be comfortable making an introduction? I've drafted a brief note below that you could forward if that would be helpful:
+
+[Draft introduction message]
+
+Thank you for considering this, and please let me know if you need any additional information.
+
+Best,
+[Your Name]`,
+    tips: [
+      'Make the introduction easy for them',
+      'Provide a draft message they can forward',
+      'Be specific about why you want to connect',
+      'Show that you\'ve done your research',
+      'Give them an easy way to decline'
+    ]
+  }
+];
+
+export const mockExpertProfiles: ExpertProfile[] = [
+  {
+    id: '1',
+    name: 'Alex Chen',
+    role: 'Senior Software Engineer',
+    company: 'Google',
+    location: 'Mountain View, CA',
+    skills: ['Machine Learning', 'Python', 'TensorFlow', 'Distributed Systems'],
+    industry: 'Technology',
+    experience: '8+ years',
+    linkedinUrl: 'https://linkedin.com/in/alexchen',
+    recentActivity: 'Posted about AI ethics in tech',
+    mutualConnections: 3,
+    connectionDifficulty: 'medium',
+    avatar: '👨‍💻'
+  },
+  {
+    id: '2',
+    name: 'Priya Sharma',
+    role: 'Principal Engineer',
+    company: 'Microsoft',
+    location: 'Seattle, WA',
+    skills: ['Cloud Computing', 'Azure', 'Kubernetes', 'DevOps'],
+    industry: 'Technology',
+    experience: '10+ years',
+    linkedinUrl: 'https://linkedin.com/in/priyasharma',
+    recentActivity: 'Shared insights on cloud architecture',
+    mutualConnections: 1,
+    connectionDifficulty: 'hard',
+    avatar: '👩‍💻'
+  },
+  {
+    id: '3',
+    name: 'David Rodriguez',
+    role: 'Product Manager',
+    company: 'Meta',
+    location: 'Menlo Park, CA',
+    skills: ['Product Strategy', 'Data Analysis', 'User Research', 'Agile'],
+    industry: 'Technology',
+    experience: '6+ years',
+    linkedinUrl: 'https://linkedin.com/in/davidrodriguez',
+    recentActivity: 'Wrote about product-market fit',
+    mutualConnections: 5,
+    connectionDifficulty: 'easy',
+    avatar: '👨‍💼'
+  },
+  {
+    id: '4',
+    name: 'Sarah Kim',
+    role: 'Data Scientist',
+    company: 'Netflix',
+    location: 'Los Gatos, CA',
+    skills: ['Data Science', 'Machine Learning', 'Python', 'SQL', 'Statistics'],
+    industry: 'Technology',
+    experience: '5+ years',
+    linkedinUrl: 'https://linkedin.com/in/sarahkim',
+    recentActivity: 'Published research on recommendation systems',
+    mutualConnections: 2,
+    connectionDifficulty: 'medium',
+    avatar: '👩‍🔬'
+  },
+  {
+    id: '5',
+    name: 'Michael Johnson',
+    role: 'Engineering Manager',
+    company: 'Amazon',
+    location: 'Seattle, WA',
+    skills: ['Team Leadership', 'System Design', 'AWS', 'Microservices'],
+    industry: 'Technology',
+    experience: '12+ years',
+    linkedinUrl: 'https://linkedin.com/in/michaeljohnson',
+    recentActivity: 'Shared tips on engineering leadership',
+    mutualConnections: 0,
+    connectionDifficulty: 'hard',
+    avatar: '👨‍💼'
+  }
+];
 export const initialResources: Resource[] = [
   {
     id: '1',

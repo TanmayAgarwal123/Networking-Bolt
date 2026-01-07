@@ -54,6 +54,42 @@ export interface Achievement {
   category: string;
   requirement?: number;
   progress?: number;
+  points: number;
+}
+
+export interface ConversationTemplate {
+  id: string;
+  title: string;
+  category: 'cold_outreach' | 'follow_up' | 'introduction' | 'coffee_chat' | 'thank_you' | 'referral_request';
+  scenario: string;
+  template: string;
+  tips: string[];
+  useCount?: number;
+}
+
+export interface ExpertSearchCriteria {
+  company?: string;
+  role?: string;
+  skills?: string[];
+  location?: string;
+  industry?: string;
+  experience?: string;
+}
+
+export interface ExpertProfile {
+  id: string;
+  name: string;
+  role: string;
+  company: string;
+  location: string;
+  skills: string[];
+  industry: string;
+  experience: string;
+  linkedinUrl?: string;
+  recentActivity?: string;
+  mutualConnections?: number;
+  connectionDifficulty: 'easy' | 'medium' | 'hard';
+  avatar: string;
 }
 
 export interface Resource {

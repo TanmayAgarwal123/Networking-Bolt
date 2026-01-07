@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { useLocalStorage } from './hooks/useLocalStorage';
-import { Contact, Event, Resource } from './types';
-import { initialContacts, initialEvents, initialResources } from './data/initialData';
+import { Contact, Event, Resource, Achievement, ExpertProfile } from './types';
+import { initialContacts, initialEvents, initialResources, initialAchievements } from './data/initialData';
 import { useAI } from './hooks/useAI';
 import Dashboard from './components/Dashboard';
 import Contacts from './components/Contacts';
 import Calendar from './components/Calendar';
 import Analytics from './components/Analytics';
 import Resources from './components/Resources';
+import ExpertFinder from './components/ExpertFinder';
+import ConversationTemplates from './components/ConversationTemplates';
+import Achievements from './components/Achievements';
 import Navigation from './components/Navigation';
 import { useStreak } from './hooks/useStreak';
 
@@ -19,6 +22,7 @@ function App() {
   // Data management with localStorage
   const [contacts, setContacts] = useLocalStorage<Contact[]>('networkmaster-contacts', initialContacts);
   const [events, setEvents] = useLocalStorage<Event[]>('networkmaster-events', initialEvents);
+  const [achievements, setAchievements] = useLocalStorage<Achievement[]>('networkmaster-achievements', initialAchievements);
   const [resources] = useLocalStorage<Resource[]>('networkmaster-resources', initialResources);
   
   // Contact management
@@ -49,6 +53,44 @@ function App() {
 
   const handleDeleteEvent = (eventId: string) => {
     setEvents(events.filter(e => e.id !== eventId));
+  };
+
+  // Achievement management
+  const handleAddAchievement = (achievement: Achievement) => {
+    setAchievements([...achievements, achievement]);
+  };
+
+  const handleUpdateAchievement = (updatedAchievement: Achievement) => {
+    setAchievements(achievements.map(a => a.id === updatedAchievement.id ? updatedAchievement : a));
+  };
+
+  const handleDeleteAchievement = (achievementId: string) => {
+    setAchievements(achievements.filter(a => a.id !== achievementId));
+  };
+
+  // Expert finder
+  const handleAddExpertToNetwork = (expert: ExpertProfile) => {
+    const newContact: Contact = {
+      id: `expert-${Date.now()}`,
+      name: expert.name,
+      role: expert.role,
+      company: expert.company,
+      location: expert.location,
+      email: '', // Would be filled in real implementation
+      priority: expert.connectionDifficulty === 'easy' ? 70 : expert.connectionDifficulty === 'medium' ? 85 : 95,
+      lastContact: 'Never',
+      tags: ['Expert', 'Cold Outreach'],
+      status: 'needs_followup' as const,
+      avatar: expert.avatar,
+      notes: `Found through expert finder. ${expert.recentActivity || ''}`,
+      addedDate: new Date().toISOString().split('T')[0],
+      industry: expert.industry,
+      expertise: expert.skills
+    };
+    
+    handleAddContact(newContact);
+    addActivity(`Added expert to network: ${expert.name}`, 'contact');
+    alert(`${expert.name} has been added to your network!`);
   };
 
   // Message handling
@@ -94,6 +136,25 @@ function App() {
           <Analytics 
             contacts={contacts}
             events={events}
+            achievements={achievements}
+            onUpdateAchievement={handleUpdateAchievement}
+            onDeleteAchievement={handleDeleteAchievement}
+            onAddAchievement={handleAddAchievement}
+          />
+        );
+      case 'expert-finder':
+        return <ExpertFinder onAddToNetwork={handleAddExpertToNetwork} />;
+      case 'templates':
+        return <ConversationTemplates />;
+      case 'achievements':
+        return (
+          <Achievements 
+            achievements={achievements}
+            onUpdateAchievement={handleUpdateAchievement}
+            onDeleteAchievement={handleDeleteAchievement}
+            onAddAchievement={handleAddAchievement}
+            totalContacts={contacts.length}
+            currentStreak={streakData.currentStreak}
           />
         );
       case 'resources':
