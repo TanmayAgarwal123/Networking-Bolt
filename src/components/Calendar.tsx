@@ -89,7 +89,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Calendar View */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 order-1">
           <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-gray-200/50 p-6">
             {/* Calendar Header */}
             <div className="flex items-center justify-between mb-6">
@@ -159,9 +159,8 @@ const Calendar: React.FC<CalendarProps> = ({
         </div>
 
         {/* Upcoming Events */}
-        <div className="space-y-6">
+        <div className="space-y-6 order-2">
           <GoogleCalendarIntegration />
-          <GoogleCalendarIntegration events={events} contacts={contacts} />
           
           <div className="bg-white/70 backdrop-blur-sm rounded-xl border border-gray-200/50 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Upcoming Events</h3>

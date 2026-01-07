@@ -16,7 +16,6 @@ const Navigation: React.FC<NavigationProps> = ({ activeTab, setActiveTab }) => {
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'contacts', label: 'Network', icon: Users },
-    { id: 'expert-finder', label: 'Find Experts', icon: TrendingUp },
     { id: 'templates', label: 'Templates', icon: BookOpen },
     { id: 'calendar', label: 'Calendar', icon: Calendar },
     { id: 'achievements', label: 'Achievements', icon: TrendingUp },

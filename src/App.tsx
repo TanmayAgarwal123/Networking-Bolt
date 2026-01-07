@@ -142,8 +142,6 @@ function App() {
             onAddAchievement={handleAddAchievement}
           />
         );
-      case 'expert-finder':
-        return <ExpertFinder onAddToNetwork={handleAddExpertToNetwork} />;
       case 'templates':
         return <ConversationTemplates />;
       case 'achievements':

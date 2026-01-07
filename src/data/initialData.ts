@@ -260,6 +260,193 @@ export const initialAchievements: Achievement[] = [
     requirement: 10,
     progress: 3,
     points: 150
+  },
+  {
+    id: '14',
+    title: 'Social Butterfly',
+    description: 'Connect with people from 5 different companies',
+    earned: false,
+    icon: '🦋',
+    category: 'diversity',
+    requirement: 5,
+    progress: 3,
+    points: 200
+  },
+  {
+    id: '15',
+    title: 'Industry Explorer',
+    description: 'Network with professionals from 3 different industries',
+    earned: false,
+    icon: '🗺️',
+    category: 'diversity',
+    requirement: 3,
+    progress: 1,
+    points: 250
+  },
+  {
+    id: '16',
+    title: 'Follow-up Master',
+    description: 'Complete 25 follow-up activities',
+    earned: false,
+    icon: '📞',
+    category: 'engagement',
+    requirement: 25,
+    progress: 0,
+    points: 300
+  },
+  {
+    id: '17',
+    title: 'Goal Crusher',
+    description: 'Complete 50 networking goals',
+    earned: false,
+    icon: '🎯',
+    category: 'productivity',
+    requirement: 50,
+    progress: 1,
+    points: 400
+  },
+  {
+    id: '18',
+    title: 'Event Enthusiast',
+    description: 'Attend 15 networking events',
+    earned: false,
+    icon: '🎪',
+    category: 'events',
+    requirement: 15,
+    progress: 2,
+    points: 350
+  },
+  {
+    id: '19',
+    title: 'LinkedIn Legend',
+    description: 'Add LinkedIn profiles for 20 contacts',
+    earned: false,
+    icon: '💼',
+    category: 'digital',
+    requirement: 20,
+    progress: 3,
+    points: 200
+  },
+  {
+    id: '20',
+    title: 'Priority Pro',
+    description: 'Maintain 10 high-priority contacts (80+ score)',
+    earned: false,
+    icon: '⚡',
+    category: 'quality',
+    requirement: 10,
+    progress: 1,
+    points: 300
+  },
+  {
+    id: '21',
+    title: 'Template Titan',
+    description: 'Use all 7 conversation template categories',
+    earned: false,
+    icon: '📝',
+    category: 'communication',
+    requirement: 7,
+    progress: 0,
+    points: 250
+  },
+  {
+    id: '22',
+    title: 'Consistency King',
+    description: 'Add at least 1 contact for 14 consecutive days',
+    earned: false,
+    icon: '👑',
+    category: 'consistency',
+    requirement: 14,
+    progress: 1,
+    points: 500
+  },
+  {
+    id: '23',
+    title: 'Meeting Maestro',
+    description: 'Schedule meetings with 20 different contacts',
+    earned: false,
+    icon: '🤝',
+    category: 'meetings',
+    requirement: 20,
+    progress: 2,
+    points: 400
+  },
+  {
+    id: '24',
+    title: 'Note Ninja',
+    description: 'Add detailed notes for 30 contacts',
+    earned: false,
+    icon: '📋',
+    category: 'organization',
+    requirement: 30,
+    progress: 3,
+    points: 200
+  },
+  {
+    id: '25',
+    title: 'Tag Team',
+    description: 'Use 15 different contact tags',
+    earned: false,
+    icon: '🏷️',
+    category: 'organization',
+    requirement: 15,
+    progress: 5,
+    points: 150
+  },
+  {
+    id: '26',
+    title: 'Referral Rockstar',
+    description: 'Receive 5 referrals through your network',
+    earned: false,
+    icon: '🌟',
+    category: 'growth',
+    requirement: 5,
+    progress: 0,
+    points: 600
+  },
+  {
+    id: '27',
+    title: 'Alumni Ace',
+    description: 'Connect with 10 alumni from your school',
+    earned: false,
+    icon: '🎓',
+    category: 'alumni',
+    requirement: 10,
+    progress: 1,
+    points: 300
+  },
+  {
+    id: '28',
+    title: 'Global Connector',
+    description: 'Network with people from 5 different countries',
+    earned: false,
+    icon: '🌍',
+    category: 'diversity',
+    requirement: 5,
+    progress: 0,
+    points: 400
+  },
+  {
+    id: '29',
+    title: 'Mentor Magnet',
+    description: 'Connect with 3 senior professionals as mentors',
+    earned: false,
+    icon: '🧙‍♂️',
+    category: 'mentorship',
+    requirement: 3,
+    progress: 1,
+    points: 500
+  },
+  {
+    id: '30',
+    title: 'Resource Researcher',
+    description: 'Complete 10 networking resources',
+    earned: false,
+    icon: '📚',
+    category: 'learning',
+    requirement: 10,
+    progress: 0,
+    points: 300
   }
 ];
 
