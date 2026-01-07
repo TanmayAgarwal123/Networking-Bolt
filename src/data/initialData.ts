@@ -132,12 +132,11 @@ export const initialAchievements: Achievement[] = [
     id: '2',
     title: 'Building Network',
     description: 'Add 10 contacts to your network',
-    earned: true,
+    earned: false,
     icon: '🌱',
-    earnedDate: '2024-12-10',
     category: 'milestone',
     requirement: 10,
-    progress: 10,
+    progress: 3,
     points: 50
   },
   {
@@ -166,12 +165,11 @@ export const initialAchievements: Achievement[] = [
     id: '5',
     title: 'Week Warrior',
     description: 'Maintained 7-day networking streak',
-    earned: true,
+    earned: false,
     icon: '🔥',
-    earnedDate: '2024-12-15',
     category: 'streak',
     requirement: 7,
-    progress: 7,
+    progress: 1,
     points: 100
   },
   {
@@ -182,7 +180,7 @@ export const initialAchievements: Achievement[] = [
     icon: '⭐',
     category: 'streak',
     requirement: 30,
-    progress: 7,
+    progress: 1,
     points: 500
   },
   {
@@ -193,7 +191,7 @@ export const initialAchievements: Achievement[] = [
     icon: '💎',
     category: 'streak',
     requirement: 100,
-    progress: 7,
+    progress: 1,
     points: 2000
   },
   {

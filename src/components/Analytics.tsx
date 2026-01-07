@@ -10,10 +10,20 @@ import AchievementModal from './AchievementModal';
 interface AnalyticsProps {
   contacts: Contact[];
   events: Event[];
+  achievements: Achievement[];
+  onUpdateAchievement: (achievement: Achievement) => void;
+  onDeleteAchievement: (achievementId: string) => void;
+  onAddAchievement: (achievement: Achievement) => void;
 }
 
-const Analytics: React.FC<AnalyticsProps> = ({ contacts, events }) => {
-  const [achievements, setAchievements] = useLocalStorage<Achievement[]>('networkmaster-achievements', []);
+const Analytics: React.FC<AnalyticsProps> = ({ 
+  contacts, 
+  events, 
+  achievements, 
+  onUpdateAchievement, 
+  onDeleteAchievement, 
+  onAddAchievement 
+}) => {
   const [goals] = useLocalStorage<Goal[]>('networkmaster-daily-goals', []);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [selectedAchievement, setSelectedAchievement] = React.useState<Achievement | undefined>();
@@ -70,9 +80,14 @@ const Analytics: React.FC<AnalyticsProps> = ({ contacts, events }) => {
     });
     
     if (hasChanges) {
-      setAchievements(updatedAchievements);
+      updatedAchievements.forEach(updated => {
+        const original = achievements.find(a => a.id === updated.id);
+        if (original && (original.progress !== updated.progress || original.earned !== updated.earned)) {
+          onUpdateAchievement(updated);
+        }
+      });
     }
-  }, [analytics.totalContacts, analytics.currentStreak, events.length]);
+  }, [analytics.totalContacts, analytics.currentStreak, events.length, achievements, onUpdateAchievement]);
 
   const monthlyStats = [
     { month: 'Oct', connections: 12, messages: 28, meetings: 6 },
@@ -164,9 +179,9 @@ const Analytics: React.FC<AnalyticsProps> = ({ contacts, events }) => {
 
   const handleSaveAchievement = (achievement: Achievement) => {
     if (selectedAchievement) {
-      setAchievements(achievements.map(a => a.id === achievement.id ? achievement : a));
+      onUpdateAchievement(achievement);
     } else {
-      setAchievements([...achievements, achievement]);
+      onAddAchievement(achievement);
     }
   };
 
