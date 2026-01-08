@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Resource } from './types';
 import { initialResources } from './data/initialData';
 import { AuthProvider } from './components/AuthProvider';
@@ -16,13 +16,21 @@ import ConversationTemplates from './components/ConversationTemplates';
 import Achievements from './components/Achievements';
 import AdminDashboard from './components/AdminDashboard';
 import Navigation from './components/Navigation';
+import OnboardingModal from './components/OnboardingModal';
+import {
+  createSampleContacts,
+  createSampleEvents,
+  createSampleGoals,
+  createSampleAchievements,
+} from './utils/sampleData';
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showProfile, setShowProfile] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const { user, profile, isAuthenticated, isAdmin } = useAuth();
   const { addActivity, streakData } = useSupabaseStreak();
-  
+
   // Supabase data management
   const {
     contacts,
@@ -38,10 +46,20 @@ function AppContent() {
     deleteEvent,
     addAchievement,
     updateAchievement,
-    deleteAchievement
+    deleteAchievement,
+    addGoal,
   } = useSupabaseData();
-  
-  const resources = initialResources; // Resources are global, not user-specific
+
+  const resources = initialResources;
+
+  useEffect(() => {
+    if (!loading && isAuthenticated && contacts.length === 0) {
+      const hasSeenOnboarding = localStorage.getItem('networkmaster-onboarding-seen');
+      if (!hasSeenOnboarding) {
+        setShowOnboarding(true);
+      }
+    }
+  }, [loading, isAuthenticated, contacts.length]);
   
   if (!isAuthenticated) {
     return <LoginForm />;
@@ -110,6 +128,37 @@ function AppContent() {
     } else if (contact.linkedinUrl) {
       window.open(contact.linkedinUrl, '_blank');
     }
+  };
+
+  const handleCreateSampleData = async () => {
+    const sampleContacts = createSampleContacts();
+    const sampleEvents = createSampleEvents();
+    const sampleGoals = createSampleGoals();
+    const sampleAchievements = createSampleAchievements();
+
+    for (const contact of sampleContacts) {
+      await addContact(contact);
+    }
+
+    for (const event of sampleEvents) {
+      await addEvent(event);
+    }
+
+    for (const goal of sampleGoals) {
+      await addGoal(goal);
+    }
+
+    for (const achievement of sampleAchievements) {
+      await addAchievement(achievement);
+    }
+
+    await addActivity('Completed onboarding with sample data', 'milestone');
+    localStorage.setItem('networkmaster-onboarding-seen', 'true');
+  };
+
+  const handleCloseOnboarding = () => {
+    setShowOnboarding(false);
+    localStorage.setItem('networkmaster-onboarding-seen', 'true');
   };
 
   const renderActiveTab = () => {
@@ -222,9 +271,15 @@ function AppContent() {
           {renderActiveTab()}
         </main>
         
-        <UserProfile 
-          isOpen={showProfile} 
-          onClose={() => setShowProfile(false)} 
+        <UserProfile
+          isOpen={showProfile}
+          onClose={() => setShowProfile(false)}
+        />
+
+        <OnboardingModal
+          isOpen={showOnboarding}
+          onClose={handleCloseOnboarding}
+          onCreateSampleData={handleCreateSampleData}
         />
       </div>
     </div>

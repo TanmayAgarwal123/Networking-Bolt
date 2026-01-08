@@ -62,9 +62,9 @@ const ContactModal: React.FC<ContactModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const contactData: Contact = {
-      id: contact?.id || Date.now().toString(),
+      id: contact?.id || crypto.randomUUID(),
       name: formData.name || '',
       role: formData.role || '',
       company: formData.company || '',
