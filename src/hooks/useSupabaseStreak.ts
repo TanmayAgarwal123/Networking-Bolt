@@ -25,7 +25,7 @@ export function useSupabaseStreak() {
       });
       setLoading(false);
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user?.id]);
 
   const fetchStreakData = async () => {
     if (!user || !supabase) {

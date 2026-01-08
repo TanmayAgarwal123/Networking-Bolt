@@ -151,7 +151,7 @@ export function useSupabaseData() {
       setGoals([]);
       setLoading(false);
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user?.id]);
 
   const fetchAllData = async () => {
     if (!user || !supabase) {
@@ -160,8 +160,6 @@ export function useSupabaseData() {
     }
 
     try {
-      setLoading(true);
-
       // Fetch contacts
       const { data: contactsData } = await supabase
         .from('contacts')
