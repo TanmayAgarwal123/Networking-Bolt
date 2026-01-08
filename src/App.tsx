@@ -23,12 +23,13 @@ import {
   createSampleGoals,
   createSampleAchievements,
 } from './utils/sampleData';
+import { createComprehensiveAchievements } from './utils/comprehensiveAchievements';
 
 function AppContent() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showProfile, setShowProfile] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const { user, profile, isAuthenticated, isAdmin } = useAuth();
+  const { user, profile, isAuthenticated, isAdmin, updateProfile } = useAuth();
   const { addActivity, streakData } = useSupabaseStreak();
 
   // Supabase data management
@@ -53,13 +54,10 @@ function AppContent() {
   const resources = initialResources;
 
   useEffect(() => {
-    if (!loading && isAuthenticated && contacts.length === 0) {
-      const hasSeenOnboarding = localStorage.getItem('networkmaster-onboarding-seen');
-      if (!hasSeenOnboarding) {
-        setShowOnboarding(true);
-      }
+    if (!loading && isAuthenticated && profile && contacts.length === 0 && !profile.onboarding_completed) {
+      setShowOnboarding(true);
     }
-  }, [loading, isAuthenticated, contacts.length]);
+  }, [loading, isAuthenticated, profile, contacts.length]);
   
   if (!isAuthenticated) {
     return <LoginForm />;
@@ -135,6 +133,7 @@ function AppContent() {
     const sampleEvents = createSampleEvents();
     const sampleGoals = createSampleGoals();
     const sampleAchievements = createSampleAchievements();
+    const comprehensiveAchievements = createComprehensiveAchievements();
 
     for (const contact of sampleContacts) {
       await addContact(contact);
@@ -152,13 +151,17 @@ function AppContent() {
       await addAchievement(achievement);
     }
 
+    for (const achievement of comprehensiveAchievements) {
+      await addAchievement(achievement);
+    }
+
     await addActivity('Completed onboarding with sample data', 'milestone');
-    localStorage.setItem('networkmaster-onboarding-seen', 'true');
+    await updateProfile({ onboarding_completed: true });
   };
 
-  const handleCloseOnboarding = () => {
+  const handleCloseOnboarding = async () => {
     setShowOnboarding(false);
-    localStorage.setItem('networkmaster-onboarding-seen', 'true');
+    await updateProfile({ onboarding_completed: true });
   };
 
   const renderActiveTab = () => {

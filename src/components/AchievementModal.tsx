@@ -24,7 +24,8 @@ const AchievementModal: React.FC<AchievementModalProps> = ({
     icon: '🎯',
     category: 'milestone',
     requirement: 1,
-    progress: 0
+    progress: 0,
+    points: 10
   });
 
   useEffect(() => {
@@ -38,7 +39,8 @@ const AchievementModal: React.FC<AchievementModalProps> = ({
         icon: '🎯',
         category: 'milestone',
         requirement: 1,
-        progress: 0
+        progress: 0,
+        points: 10
       });
     }
   }, [achievement]);
@@ -47,7 +49,7 @@ const AchievementModal: React.FC<AchievementModalProps> = ({
     e.preventDefault();
     
     const achievementData: Achievement = {
-      id: achievement?.id || `achievement-${Date.now()}`,
+      id: achievement?.id || crypto.randomUUID(),
       title: formData.title || '',
       description: formData.description || '',
       earned: formData.earned || false,
@@ -55,6 +57,7 @@ const AchievementModal: React.FC<AchievementModalProps> = ({
       category: formData.category || 'milestone',
       requirement: formData.requirement || 1,
       progress: formData.progress || 0,
+      points: formData.points || 10,
       earnedDate: formData.earned ? (formData.earnedDate || new Date().toISOString().split('T')[0]) : undefined
     };
 
@@ -64,7 +67,7 @@ const AchievementModal: React.FC<AchievementModalProps> = ({
 
   if (!isOpen) return null;
 
-  const iconOptions = ['🎯', '🔥', '☕', '🏆', '⭐', '💪', '🚀', '👑', '💎', '🎉'];
+  const iconOptions = ['🎯', '🔥', '☕', '🏆', '⭐', '💪', '🚀', '👑', '💎', '🎉', '📱', '💼', '🌟', '⚡', '🎓', '📅', '✅', '🌅', '📝', '🏷️', '👤', '📚', '💬', '🌐', '✨', '🔄', '💚', '📆', '🔴', '💯', '🏅', '🌴', '🦉'];
   const categoryOptions = ['milestone', 'streak', 'meetings', 'connections', 'growth', 'engagement'];
 
   return (
@@ -145,7 +148,7 @@ const AchievementModal: React.FC<AchievementModalProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Requirement
@@ -156,13 +159,13 @@ const AchievementModal: React.FC<AchievementModalProps> = ({
                 value={formData.requirement}
                 onChange={(e) => setFormData(prev => ({ ...prev, requirement: parseInt(e.target.value) }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="e.g., 10 for '10 connections'"
+                placeholder="e.g., 10"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Current Progress
+                Progress
               </label>
               <input
                 type="number"
@@ -170,6 +173,19 @@ const AchievementModal: React.FC<AchievementModalProps> = ({
                 max={formData.requirement}
                 value={formData.progress}
                 onChange={(e) => setFormData(prev => ({ ...prev, progress: parseInt(e.target.value) }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Points
+              </label>
+              <input
+                type="number"
+                min="1"
+                value={formData.points || 10}
+                onChange={(e) => setFormData(prev => ({ ...prev, points: parseInt(e.target.value) }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
